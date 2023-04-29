@@ -334,6 +334,21 @@ namespace Skoruba.Duende.IdentityServer.Admin.Api.Helpers
                             .AddMySql(auditLogDbConnectionString, name: "AuditLogDb")
                             .AddMySql(dataProtectionDbConnectionString, name: "DataProtectionDb");
                         break;
+                    case DatabaseProviderType.SQLite:
+                        healthChecksBuilder
+                            .AddSqlServer(configurationDbConnectionString, name: "ConfigurationDb",
+                                healthQuery: $"SELECT TOP 1 * FROM {configurationTableName}")
+                            .AddSqlServer(persistedGrantsDbConnectionString, name: "PersistentGrantsDb",
+                                healthQuery: $"SELECT TOP 1 * FROM {persistedGrantTableName}")
+                            .AddSqlServer(identityDbConnectionString, name: "IdentityDb",
+                                healthQuery: $"SELECT TOP 1 * FROM {identityTableName}")
+                            .AddSqlServer(logDbConnectionString, name: "LogDb",
+                                healthQuery: $"SELECT TOP 1 * FROM {logTableName}")
+                            .AddSqlServer(auditLogDbConnectionString, name: "AuditLogDb",
+                                healthQuery: $"SELECT TOP 1 * FROM {auditLogTableName}")
+                            .AddSqlServer(dataProtectionDbConnectionString, name: "DataProtectionDb",
+                                healthQuery: $"SELECT TOP 1 * FROM {dataProtectionTableName}");
+                        break;
                     default:
                         throw new NotImplementedException($"Health checks not defined for database provider {databaseProvider.ProviderType}");
                 }

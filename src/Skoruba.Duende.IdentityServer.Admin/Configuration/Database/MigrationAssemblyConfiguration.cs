@@ -7,6 +7,7 @@ using Skoruba.Duende.IdentityServer.Admin.EntityFramework.Configuration.Configur
 using SqlMigrationAssembly = Skoruba.Duende.IdentityServer.Admin.EntityFramework.SqlServer.Helpers.MigrationAssembly;
 using MySqlMigrationAssembly = Skoruba.Duende.IdentityServer.Admin.EntityFramework.MySql.Helpers.MigrationAssembly;
 using PostgreSQLMigrationAssembly = Skoruba.Duende.IdentityServer.Admin.EntityFramework.PostgreSQL.Helpers.MigrationAssembly;
+using SQLiteMigrationAssembly = Skoruba.Duende.IdentityServer.Admin.EntityFramework.SQLite.Helpers.MigrationAssembly;
 
 namespace Skoruba.Duende.IdentityServer.Admin.Configuration.Database
 {
@@ -21,7 +22,8 @@ namespace Skoruba.Duende.IdentityServer.Admin.Configuration.Database
                     .Assembly.GetName()
                     .Name,
                 DatabaseProviderType.MySql => typeof(MySqlMigrationAssembly).GetTypeInfo().Assembly.GetName().Name,
-                _ => throw new ArgumentOutOfRangeException()
+                DatabaseProviderType.SQLite => typeof(SQLiteMigrationAssembly).GetTypeInfo().Assembly.GetName().Name,
+                _ => throw new ArgumentOutOfRangeException(),
             };
         }
     }

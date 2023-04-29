@@ -7,6 +7,7 @@ namespace Skoruba.Duende.IdentityServer.Admin.EntityFramework.Configuration.Conf
     {
         SqlServer,
         PostgreSQL,
-        MySql
+        MySql,
+        SQLite
     }
 }
