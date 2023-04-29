@@ -61,4 +61,9 @@ Remove-Item appsettings-backup.json
 Set-Location $currentPath
 
 
-# dotnet ef migrations add Initial -c AdminIdentityDbContext -o Migrations\Identity -p .\Skoruba.Duende.IdentityServer.Admin.EntityFramework.SQLite
+# dotnet ef migrations add Initial -c AdminIdentityDbContext -o  Migrations/Identity -p ../Skoruba.Duende.IdentityServer.Admin.EntityFramework.SQLite
+# dotnet ef migrations add Initial -c AdminLogDbContext -o  Migrations/Logging -p ../Skoruba.Duende.IdentityServer.Admin.EntityFramework.SQLite
+# dotnet ef migrations add Initial -c IdentityServerConfigurationDbContext -o  Migrations/IdentityServerConfiguration -p ../Skoruba.Duende.IdentityServer.Admin.EntityFramework.SQLite
+# dotnet ef migrations add Initial -c IdentityServerPersistedGrantDbContext -o  Migrations/IdentityServerGrants -p ../Skoruba.Duende.IdentityServer.Admin.EntityFramework.SQLite
+# dotnet ef migrations add Initial -c AdminAuditLogDbContext -o  Migrations/AuditLogging -p ../Skoruba.Duende.IdentityServer.Admin.EntityFramework.SQLite
+# dotnet ef migrations add Initial -c IdentityServerDataProtectionDbContext -o  Migrations/DataProtection -p ../Skoruba.Duende.IdentityServer.Admin.EntityFramework.SQLite

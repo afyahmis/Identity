@@ -155,7 +155,8 @@ namespace Skoruba.Duende.IdentityServer.Admin.Api.Helpers
             var databaseMigrations = configuration.GetSection(nameof(DatabaseMigrationsConfiguration)).Get<DatabaseMigrationsConfiguration>() ?? new DatabaseMigrationsConfiguration();
             var connectionStrings = configuration.GetSection("ConnectionStrings").Get<ConnectionStringsConfiguration>();
 
-            switch (databaseProvider.ProviderType)
+            Console.WriteLine($"==== {databaseProvider.ProviderType}  =======");
+            switch (databaseProvider.ProviderType=DatabaseProviderType.SQLite)
             {
                 case DatabaseProviderType.SqlServer:
                     services.RegisterSqlServerDbContexts<TIdentityDbContext, TConfigurationDbContext, TPersistedGrantDbContext, TLogDbContext, TAuditLoggingDbContext, TDataProtectionDbContext, TAuditLog>(connectionStrings, databaseMigrations);
@@ -170,7 +171,7 @@ namespace Skoruba.Duende.IdentityServer.Admin.Api.Helpers
                     services.RegisterSQLiteDbContexts<TIdentityDbContext, TConfigurationDbContext, TPersistedGrantDbContext, TLogDbContext, TAuditLoggingDbContext, TDataProtectionDbContext, TAuditLog>(connectionStrings, databaseMigrations);
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(databaseProvider.ProviderType), $@"The value needs to be one of {string.Join(", ", Enum.GetNames(typeof(DatabaseProviderType)))}.");
+                    throw new ArgumentOutOfRangeException(nameof(databaseProvider.ProviderType), $@"The xxx value needs to be one of {string.Join(", ", Enum.GetNames(typeof(DatabaseProviderType)))}.");
             }
         }
 
@@ -340,17 +341,17 @@ namespace Skoruba.Duende.IdentityServer.Admin.Api.Helpers
                         break;
                     case DatabaseProviderType.SQLite:
                         healthChecksBuilder
-                            .AddSqlServer(configurationDbConnectionString, name: "ConfigurationDb",
+                            .AddSqlite(configurationDbConnectionString, name: "ConfigurationDb",
                                 healthQuery: $"SELECT TOP 1 * FROM {configurationTableName}")
-                            .AddSqlServer(persistedGrantsDbConnectionString, name: "PersistentGrantsDb",
+                            .AddSqlite(persistedGrantsDbConnectionString, name: "PersistentGrantsDb",
                                 healthQuery: $"SELECT TOP 1 * FROM {persistedGrantTableName}")
-                            .AddSqlServer(identityDbConnectionString, name: "IdentityDb",
+                            .AddSqlite(identityDbConnectionString, name: "IdentityDb",
                                 healthQuery: $"SELECT TOP 1 * FROM {identityTableName}")
-                            .AddSqlServer(logDbConnectionString, name: "LogDb",
+                            .AddSqlite(logDbConnectionString, name: "LogDb",
                                 healthQuery: $"SELECT TOP 1 * FROM {logTableName}")
-                            .AddSqlServer(auditLogDbConnectionString, name: "AuditLogDb",
+                            .AddSqlite(auditLogDbConnectionString, name: "AuditLogDb",
                                 healthQuery: $"SELECT TOP 1 * FROM {auditLogTableName}")
-                            .AddSqlServer(dataProtectionDbConnectionString, name: "DataProtectionDb",
+                            .AddSqlite(dataProtectionDbConnectionString, name: "DataProtectionDb",
                                 healthQuery: $"SELECT TOP 1 * FROM {dataProtectionTableName}");
                         break;
                     default:

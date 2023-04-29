@@ -223,7 +223,7 @@ namespace Skoruba.Duende.IdentityServer.STS.Identity.Helpers
                     services.RegisterSQLiteDbContexts<TIdentityDbContext, TConfigurationDbContext, TPersistedGrantDbContext, TDataProtectionDbContext>(identityConnectionString, configurationConnectionString, persistedGrantsConnectionString, dataProtectionConnectionString);
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(databaseProvider.ProviderType), $@"The value needs to be one of {string.Join(", ", Enum.GetNames(typeof(DatabaseProviderType)))}.");
+                    throw new ArgumentOutOfRangeException(nameof(databaseProvider.ProviderType), $@"The BB value needs to be one of {string.Join(", ", Enum.GetNames(typeof(DatabaseProviderType)))}.");
             }
         }
 
@@ -511,6 +511,18 @@ namespace Skoruba.Duende.IdentityServer.STS.Identity.Helpers
                             .AddMySql(persistedGrantsDbConnectionString, name: "PersistentGrantsDb")
                             .AddMySql(identityDbConnectionString, name: "IdentityDb")
                             .AddMySql(dataProtectionDbConnectionString, name: "DataProtectionDb");
+                        break;
+                    case DatabaseProviderType.SQLite:
+                        healthChecksBuilder
+                            .AddSqlite(configurationDbConnectionString, name: "ConfigurationDb",
+                                healthQuery: $"SELECT TOP 1 * FROM {configurationTableName}")
+                            .AddSqlite(persistedGrantsDbConnectionString, name: "PersistentGrantsDb",
+                                healthQuery: $"SELECT TOP 1 * FROM {persistedGrantTableName}")
+                            .AddSqlite(identityDbConnectionString, name: "IdentityDb",
+                                healthQuery: $"SELECT TOP 1 * FROM {identityTableName}")
+                            .AddSqlite(dataProtectionDbConnectionString, name: "DataProtectionDb",
+                                healthQuery: $"SELECT TOP 1 * FROM {dataProtectionTableName}");
+
                         break;
                     default:
                         throw new NotImplementedException($"Health checks not defined for database provider {databaseProvider.ProviderType}");

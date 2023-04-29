@@ -37,6 +37,7 @@ using Skoruba.Duende.IdentityServer.Admin.BusinessLogic.Services.Interfaces;
 using Skoruba.Duende.IdentityServer.Admin.EntityFramework.Configuration.Configuration;
 using Skoruba.Duende.IdentityServer.Admin.EntityFramework.Configuration.MySql;
 using Skoruba.Duende.IdentityServer.Admin.EntityFramework.Configuration.PostgreSQL;
+using Skoruba.Duende.IdentityServer.Admin.EntityFramework.Configuration.SQLite;
 using Skoruba.Duende.IdentityServer.Admin.EntityFramework.Configuration.SqlServer;
 using Skoruba.Duende.IdentityServer.Admin.EntityFramework.Helpers;
 using Skoruba.Duende.IdentityServer.Admin.EntityFramework.Interfaces;
@@ -143,8 +144,11 @@ namespace Skoruba.Duende.IdentityServer.Admin.UI.Helpers
                 case DatabaseProviderType.MySql:
                     services.RegisterMySqlDbContexts<TIdentityDbContext, TConfigurationDbContext, TPersistedGrantDbContext, TLogDbContext, TAuditLoggingDbContext, TDataProtectionDbContext, TAuditLog>(connectionStrings, databaseMigrations);
                     break;
+                case DatabaseProviderType.SQLite:
+                    services.RegisterSQLiteDbContexts<TIdentityDbContext, TConfigurationDbContext, TPersistedGrantDbContext, TLogDbContext, TAuditLoggingDbContext, TDataProtectionDbContext, TAuditLog>(connectionStrings, databaseMigrations);
+                    break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(databaseProvider.ProviderType), $@"The value needs to be one of {string.Join(", ", Enum.GetNames(typeof(DatabaseProviderType)))}.");
+                    throw new ArgumentOutOfRangeException(nameof(databaseProvider.ProviderType), $@"The  AA value needs to be one of {string.Join(", ", Enum.GetNames(typeof(DatabaseProviderType)))}.");
             }
         }
 
@@ -511,6 +515,21 @@ namespace Skoruba.Duende.IdentityServer.Admin.UI.Helpers
                             .AddMySql(logDbConnectionString, name: "LogDb")
                             .AddMySql(auditLogDbConnectionString, name: "AuditLogDb")
                             .AddMySql(dataProtectionDbConnectionString, name: "DataProtectionDb");
+                        break;
+                    case DatabaseProviderType.SQLite:
+                        healthChecksBuilder
+                            .AddSqlite(configurationDbConnectionString, name: "ConfigurationDb",
+                                healthQuery: $"SELECT TOP 1 * FROM {configurationTableName}")
+                            .AddSqlite(persistedGrantsDbConnectionString, name: "PersistentGrantsDb",
+                                healthQuery: $"SELECT TOP 1 * FROM {persistedGrantTableName}")
+                            .AddSqlite(identityDbConnectionString, name: "IdentityDb",
+                                healthQuery: $"SELECT TOP 1 * FROM {identityTableName}")
+                            .AddSqlite(logDbConnectionString, name: "LogDb",
+                                healthQuery: $"SELECT TOP 1 * FROM {logTableName}")
+                            .AddSqlite(auditLogDbConnectionString, name: "AuditLogDb",
+                                healthQuery: $"SELECT TOP 1 * FROM {auditLogTableName}")
+                            .AddSqlite(dataProtectionDbConnectionString, name: "DataProtectionDb",
+                                healthQuery: $"SELECT TOP 1 * FROM {dataProtectionTableName}");
                         break;
                     default:
                         throw new NotImplementedException($"Health checks not defined for database provider {databaseProviderConfiguration.ProviderType}");
