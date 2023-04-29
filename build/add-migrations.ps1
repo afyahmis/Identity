@@ -59,3 +59,6 @@ Remove-Item appsettings.json
 Copy-Item appsettings-backup.json -Destination appsettings.json
 Remove-Item appsettings-backup.json
 Set-Location $currentPath
+
+
+# dotnet ef migrations add Initial -c AdminIdentityDbContext -o Migrations\Identity -p .\Skoruba.Duende.IdentityServer.Admin.EntityFramework.SQLite
